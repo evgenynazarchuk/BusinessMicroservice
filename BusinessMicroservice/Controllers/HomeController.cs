@@ -26,8 +26,21 @@ namespace BusinessMicroservice.Controllers
         [HttpGet("getjsonhello")]
         public IActionResult GetJsonHello([FromQuery] string name)
         {
-            var hello = new Hello { Message = $"Hello, {name}" };
+            var hello = new HelloMessage { Message = $"Hello, {name}" };
             return Ok(hello);
+        }
+
+        [HttpPost("postjsonname")]
+        public IActionResult PostMessage([FromBody] NameMessage name)
+        {
+            var hello = new HelloMessage { Message = $"Hello, {name.Name}" };
+            return Ok(hello);
+        }
+
+        [HttpGet("geterror")]
+        public IActionResult GetError()
+        {
+            throw new ApplicationException("Error text");
         }
     }
 }

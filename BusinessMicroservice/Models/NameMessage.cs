@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace BusinessMicroservice.Models
 {
-    public class Hello
+    public class NameMessage
     {
-        public string Message { get; set; }
+        public string Name { get; set; }
     }
 }

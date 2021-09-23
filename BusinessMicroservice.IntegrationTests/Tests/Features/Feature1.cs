@@ -3,10 +3,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
+using System.Linq;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using FluentAssertions;
 using BusinessMicroservice.Models;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace BusinessMicroservice.IntegrationTests.Tests.Features
 {
@@ -102,6 +105,30 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             // Assert
             var result = await request.Content.ReadAsStringAsync();
             result.Should().Contain("Error text");
+        }
+
+        [TestMethod]
+        public async Task TestMethod6()
+        {
+            // Arrange
+            var app = new WebApplicationFactory<Startup>();
+            var client = app.CreateClient();
+            var numbers = new int[] { 1, 3 };
+
+            // Prepare query string
+            string query = string.Empty;
+            foreach (var number in numbers)
+            {
+                query = QueryHelpers.AddQueryString(query, "numbers", number.ToString());
+            }
+
+            // Act
+            var request = await client.GetAsync($"/getnumbers{query}");
+
+            // Arrange
+            request.StatusCode.Should().Be(HttpStatusCode.OK);
+            var result = await request.Content.ReadAsStringAsync();
+            result.Should().Be("1,3");
         }
     }
 }

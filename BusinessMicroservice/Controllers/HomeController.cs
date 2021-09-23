@@ -42,5 +42,11 @@ namespace BusinessMicroservice.Controllers
         {
             throw new ApplicationException("Error text");
         }
+
+        [HttpGet("getnumbers")]
+        public IActionResult GetNumbers([FromQuery] int[] numbers)
+        {
+            return Ok(string.Join(",", numbers));
+        }
     }
 }

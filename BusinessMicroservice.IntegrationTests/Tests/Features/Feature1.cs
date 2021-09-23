@@ -20,6 +20,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
         {
             // Arrange - секция исходных данных
             // запустить микросервис
+            // BusinessMicroservice.Startup - конфигурация микросервиса
             var app = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)
             var client = app.CreateClient();

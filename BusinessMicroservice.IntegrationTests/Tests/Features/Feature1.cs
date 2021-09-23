@@ -115,13 +115,15 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             var client = app.CreateClient();
             var numbers = new int[] { 1, 3 };
 
-            // Prepare query string
+            // подготовка строки параметров
+            // формируем строку ?numbers=1&numbers=2
+            // чтобы в итоге получить url: localhost/getnumbers?numbers=1&numbers=2
             string query = string.Empty;
             foreach (var number in numbers)
             {
                 query = QueryHelpers.AddQueryString(query, "numbers", number.ToString());
             }
-
+            
             // Act
             var request = await client.GetAsync($"/getnumbers{query}");
 

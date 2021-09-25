@@ -26,11 +26,11 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             // BusinessMicroservice.Startup - конфигурация микросервиса
             var webAppFactory = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)
-            // перед созданием клиента автоматически создаётся сервер приложения
+            // перед созданием http клиента автоматически создаётся микросервис для тестирования
             var client = webAppFactory.CreateClient();
 
             // Act - секция действия пользователя, которое хотим проверить
-            // выполнить get запрос
+            // выполнить get запрос к микросервису
             var request = await client.GetAsync("/hello");
 
             // Assert - секция утверждений/проверок результата действия пользователя
@@ -46,8 +46,8 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
         public async Task TestMethod2()
         {
             // Arrange
-            WebApplicationFactory<Startup> app = new();
-            HttpClient client = app.CreateClient();
+            var webAppFactory = new WebApplicationFactory<Startup>();
+            var client = webAppFactory.CreateClient();
             var name = "Evgeny";
 
             // Act
@@ -62,8 +62,8 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
         public async Task TestMethod3()
         {
             // Arrange
-            WebApplicationFactory<Startup> app = new();
-            HttpClient client = app.CreateClient();
+            var app = new WebApplicationFactory<Startup>();
+            var client = app.CreateClient();
             var name = "Evgeny";
 
             // Act
@@ -78,8 +78,8 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
         public async Task TestMethod4()
         {
             // Arrange
-            WebApplicationFactory<Startup> app = new();
-            HttpClient client = app.CreateClient();
+            var app = new WebApplicationFactory<Startup>();
+            var client = app.CreateClient();
 
             var nameMessage = new NameMessage { Name = "Evgeny" };
             var nameMessageJsonString = JsonSerializer.Serialize(nameMessage);
@@ -119,6 +119,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             // подготовка строки параметров
             // формируем строку вида ?numbers=1&numbers=2
             // чтобы в итоге получить url: localhost/getnumbers?numbers=1&numbers=2
+            // в тестах использовать for foreach if не рекомендуется
             string query = string.Empty;
             foreach (var number in numbers)
             {

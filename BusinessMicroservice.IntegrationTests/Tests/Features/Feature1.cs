@@ -24,12 +24,13 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             // Arrange - секция исходных данных
             // запустить микросервис
             // BusinessMicroservice.Startup - конфигурация микросервиса
-            var app = new WebApplicationFactory<BusinessMicroservice.Startup>();
+            var webAppFactory = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)
-            var client = app.CreateClient();
+            // перед созданием клиента автоматически создаётся сервер приложения
+            var client = webAppFactory.CreateClient();
 
             // Act - секция действия пользователя, которое хотим проверить
-            // выполнить get запрос, результат записать в переменную request
+            // выполнить get запрос
             var request = await client.GetAsync("/hello");
 
             // Assert - секция утверждений/проверок результата действия пользователя
@@ -116,7 +117,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             var numbers = new int[] { 1, 3 };
 
             // подготовка строки параметров
-            // формируем строку ?numbers=1&numbers=2
+            // формируем строку вида ?numbers=1&numbers=2
             // чтобы в итоге получить url: localhost/getnumbers?numbers=1&numbers=2
             string query = string.Empty;
             foreach (var number in numbers)

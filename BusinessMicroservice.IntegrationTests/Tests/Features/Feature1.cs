@@ -13,30 +13,33 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace BusinessMicroservice.IntegrationTests.Tests.Features
 {
-    // [TestClass] - атрибут класса, который содержит тесты
+    // [TestClass] - атрибут/метка для класса, который содержит тесты
     [TestClass]
     public class Feature1
     {
-        // [TestMethod] - атрибут метода, который является тестом
+        // [TestMethod] - атрибут/метка для метода, который является тестом
         [TestMethod]
         public async Task TestMethod1()
         {
             // Arrange - секция исходных данных
-            // создать фабрику микросервиса, которая создаёт сервер и клиент мкросервиса
+            // создать фабрику микросервиса, которая создаёт сервер и клиент микросервиса
+            // сервер создаётся автоматически перед созданием клиента, метод CreateClient()
             // BusinessMicroservice.Startup - конфигурация микросервиса
+            // можно создать несколько фабрик для разных микросервисов
             var webAppFactory = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)
-            // перед созданием http клиента автоматически создаётся микросервис
+            // клиент также используется для общения между микросервисами
             var client = webAppFactory.CreateClient();
 
-            // Act - секция действия пользователя, которое хотим проверить
+            // Act - секция действия пользователя, которое требуется проверить
             // выполнить get запрос к микросервису
+            // итоговый запрос http://localhost/hello
             var request = await client.GetAsync("/hello");
 
             // Assert - секция утверждений/проверок результата действия пользователя
-            // проверить код ответа
+            // проверить код ответа, 200 OK
             request.StatusCode.Should().Be(HttpStatusCode.OK);
-            // прочитать содержимое ответа
+            // прочитать содержимое ответа, Hello world
             var result = await request.Content.ReadAsStringAsync();
             // проверить содержимое
             result.Should().Be("Hello world");
@@ -127,7 +130,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             {
                 query = QueryHelpers.AddQueryString(query, "numbers", number.ToString());
             }
-            
+
             // Act
             var request = await client.GetAsync($"/getnumbers{query}");
 

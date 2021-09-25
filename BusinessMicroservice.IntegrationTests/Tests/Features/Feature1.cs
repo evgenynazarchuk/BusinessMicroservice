@@ -22,7 +22,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
         public async Task TestMethod1()
         {
             // Arrange - секция исходных данных
-            // создать фабрику микросервиса, которая создаст сервер и клиент мкросервиса
+            // создать фабрику микросервиса, которая создаёт сервер и клиент мкросервиса
             // BusinessMicroservice.Startup - конфигурация микросервиса
             var webAppFactory = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)

@@ -22,11 +22,11 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
         public async Task TestMethod1()
         {
             // Arrange - секция исходных данных
-            // запустить микросервис
+            // создать фабрику микросервиса, которая создаст сервер и клиент мкросервиса
             // BusinessMicroservice.Startup - конфигурация микросервиса
             var webAppFactory = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)
-            // перед созданием http клиента автоматически создаётся микросервис для тестирования
+            // перед созданием http клиента автоматически создаётся микросервис
             var client = webAppFactory.CreateClient();
 
             // Act - секция действия пользователя, которое хотим проверить
@@ -80,12 +80,14 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             // Arrange
             var app = new WebApplicationFactory<Startup>();
             var client = app.CreateClient();
-
             var nameMessage = new NameMessage { Name = "Evgeny" };
+
+            // конвертация объекта в json строку для передачи микросервису с отметкой application/json
             var nameMessageJsonString = JsonSerializer.Serialize(nameMessage);
             var httpRequestContent = new StringContent(nameMessageJsonString, Encoding.UTF8, "application/json");
 
             // Act
+            // post запрос
             var request = await client.PostAsync("/postjsonname", httpRequestContent);
 
             // Assert
@@ -119,7 +121,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             // подготовка строки параметров
             // формируем строку вида ?numbers=1&numbers=2
             // чтобы в итоге получить url: localhost/getnumbers?numbers=1&numbers=2
-            // в тестах использовать for foreach if не рекомендуется
+            // не рекомендуется использовать в тестах операторы for, foreach, if, switch 
             string query = string.Empty;
             foreach (var number in numbers)
             {

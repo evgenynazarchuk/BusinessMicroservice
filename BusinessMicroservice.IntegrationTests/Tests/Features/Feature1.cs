@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Linq;
@@ -19,24 +20,46 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
     {
         // [TestMethod] - атрибут/метка для метода, который является тестом
         [TestMethod]
+        public async Task TestMethod0()
+        {
+            // Arrange - секция исходных данных, инициализация данных
+            // создать http клиент (аналог swagger, postman, soap ui)
+            var httpClient = new HttpClient() { BaseAddress = new Uri("https://jsonplaceholder.typicode.com") };
+            // если требуется, то добавить headers
+            // client.DefaultRequestHeaders.Add("token", new List<string> { "abracadabra1" });
+
+            // Act - секция действия пользователя, которое требуется проверить
+            // выполнить запрос https://jsonplaceholder.typicode.com/todos/1
+            var request = await httpClient.GetAsync("/todos/1");
+
+            // Assert - секция утверждений/проверок результата действия пользователя
+            // проверить код статуса ответа
+            request.StatusCode.Should().Be(HttpStatusCode.OK);
+            // прочитать содержимое ответа
+            var result = await request.Content.ReadAsStringAsync();
+            // проверить содержимое ответа
+            result.Should().Be("{\n  \"userId\": 1,\n  \"id\": 1,\n  \"title\": \"delectus aut autem\",\n  \"completed\": false\n}");
+        }
+
+        [TestMethod]
         public async Task TestMethod1()
         {
-            // Arrange - секция исходных данных
-            // создать фабрику микросервиса, которая создаёт сервер и клиент микросервиса
-            // сервер создаётся автоматически перед созданием клиента, метод CreateClient()
-            // BusinessMicroservice.Startup - конфигурация микросервиса
+            // Arrange
+            // создать фабрику бизнес микросервиса, которая создаёт сервер и клиент микросервиса
+            // сервер бизнес микросервиса создаётся автоматически перед созданием клиента, метод CreateClient()
+            // BusinessMicroservice.Startup - c# класс конфигурации бизнес микросервиса
             // можно создать несколько фабрик для разных микросервисов
             var webAppFactory = new WebApplicationFactory<BusinessMicroservice.Startup>();
             // создать http клиент для микросервиса (аналог swagger, postman, soap ui)
             // клиент также используется для общения между микросервисами
             var client = webAppFactory.CreateClient();
 
-            // Act - секция действия пользователя, которое требуется проверить
+            // Act
             // выполнить get запрос к микросервису
             // итоговый запрос http://localhost/hello
             var request = await client.GetAsync("/hello");
 
-            // Assert - секция утверждений/проверок результата действия пользователя
+            // Assert
             // проверить код ответа, 200 OK
             request.StatusCode.Should().Be(HttpStatusCode.OK);
             // прочитать содержимое ответа, Hello world
@@ -109,6 +132,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             var request = await client.GetAsync("/geterror");
 
             // Assert
+            request.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             var result = await request.Content.ReadAsStringAsync();
             result.Should().Contain("Error text");
         }
@@ -132,6 +156,7 @@ namespace BusinessMicroservice.IntegrationTests.Tests.Features
             }
 
             // Act
+            // итоговая строка запроса http://localhost/getnumbers?numbers=1&numbers=2
             var request = await client.GetAsync($"/getnumbers{query}");
 
             // Arrange
